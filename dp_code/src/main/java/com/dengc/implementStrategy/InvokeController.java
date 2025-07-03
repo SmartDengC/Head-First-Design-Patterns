@@ -2,6 +2,9 @@ package com.dengc.implementStrategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
@@ -15,8 +18,8 @@ import java.util.stream.Collectors;
  * @since 2025/7/3 00:20
  */
 
-@Service
-public class Invoke {
+@RestController
+public class InvokeController {
 
     // 定义map
     private Map<UserType, CustomerService> customerServiceMap;
@@ -27,10 +30,16 @@ public class Invoke {
     /**
      * 主要的调用方法
      */
-    public String invokeMethod(int recharge){
+    @GetMapping("/customer/{recharge}")
+    public String invokeMethod(@PathVariable(value = "recharge") int recharge){
         UserType userType = UserType.typeOf(recharge);
         CustomerService customerService = customerServiceMap.getOrDefault(userType, defaultCustomerService);
         return customerService.findCustomer();
+    }
+
+    @GetMapping("/test/{recharge}")
+    public String testMethod(@PathVariable(value = "recharge") Integer recharge){
+        return recharge.toString();
     }
 
     @Autowired
